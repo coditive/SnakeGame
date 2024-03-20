@@ -51,6 +51,6 @@ class MainViewModelImpl : ViewModel(), GameViewModel, GameController {
 enum class Directions(val move: Pair<Int, Int>) {
     LEFT(Pair(-1, 0)),
     RIGHT(Pair(1, 0)),
-    UP(Pair(0, 1)),
-    DOWN(Pair(0, -1))
+    UP(Pair(0, -1)),
+    DOWN(Pair(0, 1))
 }
