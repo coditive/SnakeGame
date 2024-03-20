@@ -9,6 +9,7 @@ class SnakeGridState {
     private var gridLength = 0
     private var gridWidth = 0
     private var snakeLength = 10
+    private var preHeadDirection: Directions = Directions.RIGHT
     private var restrictedDirection: Directions = getOppositeDirection(Directions.RIGHT)
     var snakeGrid = MutableStateFlow<List<Pair<Int, Int>>>(listOf())
     val foodGrid = MutableStateFlow<List<Pair<Int, Int>>>(listOf())
@@ -27,6 +28,15 @@ class SnakeGridState {
             repeat(snakeLength) {
                 add(gridWidth / 2 + it to gridLength / 2)
             }
+        }
+    }
+
+    fun updateSnakeBodyAfterLoop() {
+        when(preHeadDirection) {
+            Directions.LEFT -> moveSnakeLeft()
+            Directions.RIGHT -> moveSnakeRight()
+            Directions.UP -> moveSnakeUp()
+            Directions.DOWN -> moveSnakeDown()
         }
     }
 
@@ -102,12 +112,11 @@ class SnakeGridState {
         }
     }
 
-    private fun getOppositeDirection(direction: Directions): Directions =
-        when (direction) {
-            Directions.LEFT -> Directions.RIGHT
-            Directions.RIGHT -> Directions.LEFT
-            Directions.UP -> Directions.DOWN
-            Directions.DOWN -> Directions.UP
-        }
+    private fun getOppositeDirection(direction: Directions): Directions = when (direction) {
+        Directions.LEFT -> Directions.RIGHT
+        Directions.RIGHT -> Directions.LEFT
+        Directions.UP -> Directions.DOWN
+        Directions.DOWN -> Directions.UP
+    }
 
 }

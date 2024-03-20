@@ -1,8 +1,12 @@
 package com.syrous.snakegame
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.syrous.snakegame.screen.GameScreen
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 class MainViewModelImpl : ViewModel(), GameViewModel, GameController {
 
@@ -11,8 +15,11 @@ class MainViewModelImpl : ViewModel(), GameViewModel, GameController {
 
     override var snakeGridState: SnakeGridState = SnakeGridState()
 
+    private var gameLoop: Job? = null
+
     override fun startGame() {
         currentScreen.value = GameScreen.GAME_PLAY_SCREEN
+        resumeGame()
     }
 
     override fun pauseGame() {
@@ -20,7 +27,12 @@ class MainViewModelImpl : ViewModel(), GameViewModel, GameController {
     }
 
     override fun resumeGame() {
-
+        gameLoop = viewModelScope.launch {
+            while (true) {
+                delay(160)
+                snakeGridState.updateSnakeBodyAfterLoop()
+            }
+        }
     }
 
     override fun restartGame() {
