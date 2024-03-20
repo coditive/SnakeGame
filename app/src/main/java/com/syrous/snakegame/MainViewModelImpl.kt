@@ -13,7 +13,7 @@ class MainViewModelImpl : ViewModel(), GameViewModel, GameController {
     override val currentScreen: MutableStateFlow<GameScreen> =
         MutableStateFlow(GameScreen.START_GAME)
 
-    override var snakeGridState: SnakeGridState = SnakeGridState()
+    override var snakeGridState: SnakeGridState = SnakeGridStateImpl()
 
     private var gameLoop: Job? = null
 
@@ -40,19 +40,27 @@ class MainViewModelImpl : ViewModel(), GameViewModel, GameController {
     }
 
     override fun moveRight() {
-        snakeGridState.moveSnakeRight()
+       viewModelScope.launch {
+           snakeGridState.moveSnakeRight()
+       }
     }
 
     override fun moveLeft() {
-        snakeGridState.moveSnakeLeft()
+        viewModelScope.launch {
+            snakeGridState.moveSnakeLeft()
+        }
     }
 
     override fun moveUp() {
-        snakeGridState.moveSnakeUp()
+        viewModelScope.launch {
+            snakeGridState.moveSnakeUp()
+        }
     }
 
     override fun moveDown() {
-        snakeGridState.moveSnakeDown()
+        viewModelScope.launch {
+            snakeGridState.moveSnakeDown()
+        }
     }
 
     override fun exitGame() {
