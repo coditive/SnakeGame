@@ -23,6 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.syrous.snakegame.R
 import com.syrous.snakegame.SnakeGridState
+import com.syrous.snakegame.util.UnitScale
 
 sealed class GamePlayScreenAction {
     data object MoveLeft : GamePlayScreenAction()
@@ -54,13 +55,13 @@ class GamePlay(
         Canvas(modifier = modifier
             .fillMaxSize()
             .onGloballyPositioned { coordinates ->
-                snakeGridState.updateGridSize(coordinates.size.width, coordinates.size.height)
+                snakeGridState.updateGridSize(coordinates.size.width / UnitScale, coordinates.size.height / UnitScale)
             }) {
             Log.d("GamePlayScreen", "snakePosition -> $snakePosition")
             for (pos in snakePosition) {
                 drawRect(
                     color = Color.Red,
-                    topLeft = Offset(pos.first.toFloat(), pos.second.toFloat()),
+                    topLeft = Offset(pos.first.toFloat() * UnitScale, pos.second.toFloat() * UnitScale),
                     size = Size(20.dp.toPx(), 20.dp.toPx()),
                 )
             }

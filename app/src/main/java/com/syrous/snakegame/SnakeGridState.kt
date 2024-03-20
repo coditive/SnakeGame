@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 class SnakeGridState {
 
+
+    // Private variables
     private var gridLength = 0
     private var gridWidth = 0
     private var snakeLength = 10
@@ -49,6 +51,7 @@ class SnakeGridState {
             val newHead = head + Directions.LEFT.move
             currList.add(0, newHead)
             currList.remove(tail)
+            preHeadDirection = Directions.LEFT
             restrictedDirection = getOppositeDirection(Directions.LEFT)
             Log.d(
                 "SnakeGridState",
@@ -64,13 +67,14 @@ class SnakeGridState {
         val head = snakeGrid.value.first()
         val tail = snakeGrid.value.last()
         if (restrictedDirection != Directions.RIGHT) {
-            val newTail = tail + Directions.RIGHT.move
-            currList.add(newTail)
-            currList.remove(head)
+            val newHead = head + Directions.RIGHT.move
+            currList.add(0, newHead)
+            currList.remove(tail)
+            preHeadDirection = Directions.RIGHT
             restrictedDirection = getOppositeDirection(Directions.RIGHT)
             Log.d(
                 "SnakeGridState",
-                "move Right -> currList -> ${snakeGrid.value}, newTail -> $newTail, restrictedDirection -> $restrictedDirection"
+                "move Right -> currList -> ${snakeGrid.value}, newHead -> $newHead, restrictedDirection -> $restrictedDirection"
             )
             snakeGrid.value = currList
         }
@@ -85,6 +89,7 @@ class SnakeGridState {
             val newHead = head + Directions.UP.move
             currList.add(0, newHead)
             currList.remove(tail)
+            preHeadDirection = Directions.UP
             restrictedDirection = getOppositeDirection(Directions.UP)
             Log.d(
                 "SnakeGridState",
@@ -100,13 +105,14 @@ class SnakeGridState {
         val head = snakeGrid.value.first()
         val tail = snakeGrid.value.last()
         if (restrictedDirection != Directions.DOWN) {
-            val newTail = tail + Directions.DOWN.move
-            currList.add(newTail)
-            currList.remove(head)
+            val newHead = head + Directions.DOWN.move
+            currList.add(0, newHead)
+            currList.remove(tail)
+            preHeadDirection = Directions.DOWN
             restrictedDirection = getOppositeDirection(Directions.DOWN)
             Log.d(
                 "SnakeGridState",
-                "move Down -> currList -> ${snakeGrid.value}, newTail -> $newTail, restrictedDirection -> $restrictedDirection"
+                "move Down -> currList -> ${snakeGrid.value}, newHead -> $newHead, restrictedDirection -> $restrictedDirection"
             )
             snakeGrid.value = currList
         }
