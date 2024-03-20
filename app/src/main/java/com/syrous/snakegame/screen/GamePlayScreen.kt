@@ -8,9 +8,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Button
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -40,12 +41,12 @@ class GamePlay(
 
     @Composable
     fun Screen(modifier: Modifier = Modifier) {
-        Surface(
+        Scaffold(
             modifier = modifier,
         ) {
             val snakePosition = snakeGridState.snakeGrid.collectAsState().value
             Log.d("GamePlayScreen", "snakePosition after collection -> $snakePosition")
-            GridCanvas(modifier, snakePosition)
+            GridCanvas(modifier.padding(it), snakePosition)
             GridController(modifier, performAction)
         }
     }
