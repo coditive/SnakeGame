@@ -4,6 +4,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -57,11 +59,6 @@ class GamePlay(
             }
         ) {
             val context = LocalContext.current
-            val snakePosition = snakeGridState.snakeGrid.collectAsState().value
-            val foodPosition = snakeGridState.foodGrid.collectAsState().value
-            Log.d("GamePlayScreen", "snakePosition after collection -> $snakePosition")
-            GridCanvas(modifier.padding(it), snakePosition, foodPosition)
-            GridController(modifier, performAction)
             LaunchedEffect(key1 = Unit) {
                 snakeGridState.snakeEvent.collectLatest { event ->
                     when (event) {
@@ -70,6 +67,35 @@ class GamePlay(
                         }
                     }
                 }
+            }
+
+            val snakePosition = snakeGridState.snakeGrid.collectAsState().value
+            val foodPosition = snakeGridState.foodGrid.collectAsState().value
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+                    .padding(10.dp),
+            ) {
+                GridCanvas(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.7f)
+                        .border(
+                            width = 1.dp,
+                            color = Color.Gray
+                        ),
+                    snakePosition = snakePosition,
+                    foodPosition = foodPosition
+                )
+
+                GridController(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
+                    performAction = performAction
+                )
             }
         }
     }

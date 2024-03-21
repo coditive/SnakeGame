@@ -2,6 +2,8 @@ package com.syrous.snakegame
 
 import android.util.Log
 import com.syrous.snakegame.SnakeEvent.SnakeHitWall
+import com.syrous.snakegame.util.FoodSize
+import com.syrous.snakegame.util.SnakeSize
 import com.syrous.snakegame.util.plus
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +28,6 @@ class SnakeGridStateImpl : SnakeGridState {
         if (gridWidth != width && gridHeight != height) {
             gridWidth = width
             gridHeight = height
-            Log.d("SnakeGridState", "updateGridSize -> height = $gridHeight, width = $gridWidth")
             populateFoodInGame()
             drawSnake()
         }
@@ -67,8 +68,8 @@ class SnakeGridStateImpl : SnakeGridState {
 
     private fun canHaveFood(head: Pair<Int, Int>): Pair<Int, Int>? {
         for (food in foodGrid.value) {
-            val foodRangeX = food.first - 1 until food.first + 1
-            val foodRangeY = food.second - 1 until food.second + 1
+            val foodRangeX = food.first - (SnakeSize / FoodSize) until food.first + (SnakeSize / FoodSize)
+            val foodRangeY = food.second - (SnakeSize / FoodSize) until food.second + (SnakeSize / FoodSize)
             if (head.first in foodRangeX && head.second in foodRangeY) {
                 return food
             }
