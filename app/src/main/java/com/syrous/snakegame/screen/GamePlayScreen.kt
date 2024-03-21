@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -28,6 +29,8 @@ import androidx.compose.ui.unit.dp
 import com.syrous.snakegame.R
 import com.syrous.snakegame.SnakeEvent
 import com.syrous.snakegame.SnakeGridState
+import com.syrous.snakegame.util.FoodSize
+import com.syrous.snakegame.util.SnakeSize
 import com.syrous.snakegame.util.UnitScale
 import kotlinx.coroutines.flow.collectLatest
 
@@ -48,11 +51,16 @@ class GamePlay(
     fun Screen(modifier: Modifier = Modifier) {
         Scaffold(
             modifier = modifier,
+            topBar = {
+                val score = snakeGridState.score.collectAsState().value
+                Text(text = "Your Score: $score")
+            }
         ) {
             val context = LocalContext.current
             val snakePosition = snakeGridState.snakeGrid.collectAsState().value
+            val foodPosition = snakeGridState.foodGrid.collectAsState().value
             Log.d("GamePlayScreen", "snakePosition after collection -> $snakePosition")
-            GridCanvas(modifier.padding(it), snakePosition)
+            GridCanvas(modifier.padding(it), snakePosition, foodPosition)
             GridController(modifier, performAction)
             LaunchedEffect(key1 = Unit) {
                 snakeGridState.snakeEvent.collectLatest { event ->
@@ -67,7 +75,11 @@ class GamePlay(
     }
 
     @Composable
-    fun GridCanvas(modifier: Modifier = Modifier, snakePosition: List<Pair<Int, Int>>) {
+    fun GridCanvas(
+        modifier: Modifier = Modifier,
+        snakePosition: List<Pair<Int, Int>>,
+        foodPosition: List<Pair<Int, Int>>
+    ) {
         Canvas(modifier = modifier
             .fillMaxSize()
             .onGloballyPositioned { coordinates ->
@@ -84,7 +96,19 @@ class GamePlay(
                         pos.first.toFloat() * UnitScale,
                         pos.second.toFloat() * UnitScale
                     ),
-                    size = Size(20.dp.toPx(), 20.dp.toPx()),
+                    size = Size(SnakeSize.dp.toPx(), SnakeSize.dp.toPx()),
+                )
+            }
+            Log.d("GamePlayScreen", "foodPosition -> $foodPosition")
+
+            for (food in foodPosition) {
+                drawCircle(
+                    color = Color.Black,
+                    radius = FoodSize.dp.toPx(),
+                    center = Offset(
+                        food.first.toFloat() * UnitScale,
+                        food.second.toFloat() * UnitScale
+                    )
                 )
             }
         }
