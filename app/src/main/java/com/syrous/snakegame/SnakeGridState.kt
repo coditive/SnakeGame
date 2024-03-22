@@ -7,9 +7,10 @@ interface SnakeGridState {
 
     val snakeEvent: SharedFlow<SnakeEvent>
     val snakeGrid: StateFlow<List<Pair<Int, Int>>>
-    val foodGrid: StateFlow<List<Pair<Int, Int>>>
+    val foodGrid: StateFlow<Set<Pair<Int, Int>>>
     val score: StateFlow<Int>
     fun updateGridSize(width: Int, height: Int)
+    fun restartGame()
     suspend fun updateSnakeBodyAfterLoop()
     suspend fun moveSnakeLeft()
     suspend fun moveSnakeRight()

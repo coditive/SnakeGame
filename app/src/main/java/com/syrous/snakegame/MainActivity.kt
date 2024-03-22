@@ -64,6 +64,8 @@ class MainActivity : ComponentActivity() {
                 GamePlayScreenAction.MoveLeft -> controller.moveLeft()
                 GamePlayScreenAction.MoveRight -> controller.moveRight()
                 GamePlayScreenAction.MoveUp -> controller.moveUp()
+                GamePlayScreenAction.EndGame -> controller.exitGame()
+                GamePlayScreenAction.RestartGame -> controller.restartGame()
             }
         }
         gameOver = GameOver { action ->

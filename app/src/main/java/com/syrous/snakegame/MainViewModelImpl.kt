@@ -36,7 +36,10 @@ class MainViewModelImpl : ViewModel(), GameViewModel, GameController {
     }
 
     override fun restartGame() {
-        TODO("Not yet implemented")
+        gameLoop?.cancel()
+        gameLoop = null
+        snakeGridState.restartGame()
+        resumeGame()
     }
 
     override fun moveRight() {
@@ -64,6 +67,8 @@ class MainViewModelImpl : ViewModel(), GameViewModel, GameController {
     }
 
     override fun exitGame() {
+        gameLoop?.cancel()
+        gameLoop = null
         currentScreen.value = GameScreen.GAME_OVER_SCREEN
     }
 }

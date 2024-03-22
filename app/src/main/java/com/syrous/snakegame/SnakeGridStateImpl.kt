@@ -21,7 +21,7 @@ class SnakeGridStateImpl : SnakeGridState {
 
     override val snakeEvent = MutableSharedFlow<SnakeEvent>()
     override val snakeGrid = MutableStateFlow<List<Pair<Int, Int>>>(listOf())
-    override val foodGrid = MutableStateFlow<List<Pair<Int, Int>>>(listOf())
+    override val foodGrid = MutableStateFlow<Set<Pair<Int, Int>>>(setOf())
     override val score = MutableStateFlow(0)
 
     override fun updateGridSize(width: Int, height: Int) {
@@ -33,8 +33,14 @@ class SnakeGridStateImpl : SnakeGridState {
         }
     }
 
+    override fun restartGame() {
+        score.value = 0
+        populateFoodInGame()
+        drawSnake()
+    }
+
     private fun populateFoodInGame() {
-        foodGrid.value = buildList {
+        foodGrid.value = buildSet {
             repeat(50) {
                 add(generateFood())
             }
@@ -42,7 +48,7 @@ class SnakeGridStateImpl : SnakeGridState {
     }
 
     private fun generateFood(): Pair<Int, Int> {
-        return nextInt(gridWidth) to nextInt(gridHeight)
+        return nextInt(gridWidth - 1) to nextInt(gridHeight - 1)
     }
 
     private fun drawSnake() {
@@ -68,8 +74,10 @@ class SnakeGridStateImpl : SnakeGridState {
 
     private fun canHaveFood(head: Pair<Int, Int>): Pair<Int, Int>? {
         for (food in foodGrid.value) {
-            val foodRangeX = food.first - (SnakeSize / FoodSize) until food.first + (SnakeSize / FoodSize)
-            val foodRangeY = food.second - (SnakeSize / FoodSize) until food.second + (SnakeSize / FoodSize)
+            val foodRangeX =
+                food.first - (SnakeSize / FoodSize) until food.first + (SnakeSize / FoodSize)
+            val foodRangeY =
+                food.second - (SnakeSize / FoodSize) until food.second + (SnakeSize / FoodSize)
             if (head.first in foodRangeX && head.second in foodRangeY) {
                 return food
             }
@@ -79,7 +87,7 @@ class SnakeGridStateImpl : SnakeGridState {
 
     override suspend fun moveSnakeLeft() {
         val currList = snakeGrid.value.toMutableList()
-        val foodList = foodGrid.value.toMutableList()
+        val foodList = foodGrid.value.toMutableSet()
         Log.d("SnakeGridState", "move Left -> currList -> $currList")
         val head = snakeGrid.value.first()
         val newHead = head + Directions.LEFT.move
@@ -114,7 +122,7 @@ class SnakeGridStateImpl : SnakeGridState {
 
     override suspend fun moveSnakeRight() {
         val currList = snakeGrid.value.toMutableList()
-        val foodList = foodGrid.value.toMutableList()
+        val foodList = foodGrid.value.toMutableSet()
         Log.d("SnakeGridState", "move Right -> currList -> $currList")
         val head = snakeGrid.value.first()
         val newHead = head + Directions.RIGHT.move
@@ -150,7 +158,7 @@ class SnakeGridStateImpl : SnakeGridState {
 
     override suspend fun moveSnakeUp() {
         val currList = snakeGrid.value.toMutableList()
-        val foodList = foodGrid.value.toMutableList()
+        val foodList = foodGrid.value.toMutableSet()
         Log.d("SnakeGridState", "move Up -> currList -> $currList")
         val head = snakeGrid.value.first()
         val newHead = head + Directions.UP.move
@@ -182,7 +190,7 @@ class SnakeGridStateImpl : SnakeGridState {
 
     override suspend fun moveSnakeDown() {
         val currList = snakeGrid.value.toMutableList()
-        val foodList = foodGrid.value.toMutableList()
+        val foodList = foodGrid.value.toMutableSet()
         Log.d("SnakeGridState", "move Down -> currList -> $currList")
         val head = snakeGrid.value.first()
         val newHead = head + Directions.DOWN.move
