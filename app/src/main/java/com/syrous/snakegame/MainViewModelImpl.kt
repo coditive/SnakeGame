@@ -10,6 +10,8 @@ import kotlinx.coroutines.launch
 
 class MainViewModelImpl : ViewModel(), GameViewModel, GameController {
 
+    private var isPaused = false
+
     override val currentScreen: MutableStateFlow<GameScreen> =
         MutableStateFlow(GameScreen.START_GAME)
 
@@ -23,14 +25,18 @@ class MainViewModelImpl : ViewModel(), GameViewModel, GameController {
     }
 
     override fun pauseGame() {
-        TODO("Not yet implemented")
+        isPaused = true
+        gameLoop?.cancel()
+        gameLoop = null
     }
 
     override fun resumeGame() {
-        gameLoop = viewModelScope.launch {
-            while (true) {
-                delay(160)
-                snakeGridState.updateSnakeBodyAfterLoop()
+        if (!isPaused) {
+            gameLoop = viewModelScope.launch {
+                while (true) {
+                    delay(160)
+                    snakeGridState.updateSnakeBodyAfterLoop()
+                }
             }
         }
     }
@@ -43,9 +49,9 @@ class MainViewModelImpl : ViewModel(), GameViewModel, GameController {
     }
 
     override fun moveRight() {
-       viewModelScope.launch {
-           snakeGridState.moveSnakeRight()
-       }
+        viewModelScope.launch {
+            snakeGridState.moveSnakeRight()
+        }
     }
 
     override fun moveLeft() {

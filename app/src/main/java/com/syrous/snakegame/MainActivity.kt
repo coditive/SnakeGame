@@ -68,9 +68,9 @@ class MainActivity : ComponentActivity() {
                 GamePlayScreenAction.RestartGame -> controller.restartGame()
             }
         }
-        gameOver = GameOver { action ->
+        gameOver = GameOver(controller.snakeGridState) { action ->
             when(action) {
-                GameOverScreenAction.ReStart -> TODO()
+                GameOverScreenAction.Exit -> finish()
             }
         }
     }
