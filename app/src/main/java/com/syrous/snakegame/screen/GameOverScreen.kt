@@ -6,6 +6,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -50,22 +51,24 @@ class GameOver(
 
     @Composable
     fun ScoreTicker(modifier: Modifier, score: Int) {
-        score.toString().forEach { digit ->
-            AnimatedContent(modifier = modifier,
-                targetState = digit,
-                label = "",
-                transitionSpec = {
-                    if (targetState > initialState) {
-                        slideInVertically { -it } togetherWith slideOutVertically { it }
-                    } else {
-                        slideInVertically { it } togetherWith slideOutVertically { -it }
-                    }
-                }) {
-                Text(
-                    text = it.toString(),
-                    fontSize = 56.sp,
-                    modifier = Modifier,
-                )
+        Row(modifier = modifier) {
+            score.toString().forEach { digit ->
+                AnimatedContent(modifier = modifier,
+                    targetState = digit,
+                    label = "",
+                    transitionSpec = {
+                        if (targetState > initialState) {
+                            slideInVertically { -it } togetherWith slideOutVertically { it }
+                        } else {
+                            slideInVertically { it } togetherWith slideOutVertically { -it }
+                        }
+                    }) {
+                    Text(
+                        text = it.toString(),
+                        fontSize = 56.sp,
+                        modifier = Modifier,
+                    )
+                }
             }
         }
     }
